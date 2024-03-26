@@ -30,7 +30,13 @@ def main():
         print("lowestY: " + str(lowestY))
 
     for i, line in enumerate(lines):
-        if "G1" in line and "Y" in line:
+        if ";end of Start GCode" in line:
+            validPart = True
+            continue
+        if ";end of Gcode" in line:
+            validPart = False
+            continue
+        if "G1" in line and "Y" in line and validPart:
             match = float(re.findall(pattern, line)[0])
             newY = round(match - lowestY, 4)
             lines[i] = re.sub(pattern, str(newY), line)
